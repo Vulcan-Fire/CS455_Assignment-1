@@ -28,6 +28,21 @@
     margin-left: 10px;
     margin-bottom:20px;
   }
+
+  .logout-button {
+    position: absolute;
+    padding: 10px 20px;
+    font-size: 18px;
+    color: #ffffff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+    margin-left: 249px;
+    margin-bottom:20px;
+  }
   
   .play-button:hover {
     background-color: #0056b3;
