@@ -103,7 +103,7 @@ const LoginPage = ({ onLogin }) =&gt; {
   const handleLogin = async (event) =&gt; {
     event.preventDefault();
     try {
-      const response = await fetch(&quot;http://localhost:5000/api/auth&quot;, {
+      const response = await fetch(&quot;https://cs455-assignment-1-khsw.onrender.com/api/auth&quot;, {
         method: &quot;POST&quot;,
         headers: {
           &quot;Content-Type&quot;: &quot;application/json&quot;,
