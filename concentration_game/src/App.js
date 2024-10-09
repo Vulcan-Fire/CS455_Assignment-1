@@ -6,10 +6,10 @@ import Game from "./components/Game";
 import LoginPage from "./components/LoginPage";
 import AudioPlayer from "./components/AudioPlayer";
 import backgroundMusic from "./assets/background-music.mp3";
+import Leaderboard from "./components/LeaderBoard";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
   const handleLogin = (username) => {
     setIsAuthenticated(true);
     localStorage.setItem("username", username);
