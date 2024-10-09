@@ -1,60 +1,53 @@
-import React from "react";
-import { render, act } from "@testing-library/react";
-import MemoryGame from "../components/Game";
-import useGameLogic from "../components/FlipLogic";
+import React from 'react';
+import { render, screen, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import MemoryGame from '../components/Game';
+import '@testing-library/jest-dom/extend-expect';
 
-jest.mock("../components/FlipLogic", () => ({
-  __esModule: true,
-  default: jest.fn(),
-}));
+const mockUsername = 'testUser';
 
-describe("MemoryGame Component", () => {
-  let mockGameLogic;
+global.fetch = jest.fn();
 
+describe('MemoryGame', () => {
   beforeEach(() => {
-    mockGameLogic = {
-      blocks: Array(16).fill({ isDifferent: false }),
-      flippedBlocks: Array(16).fill(false),
-      isGameVisible: true,
-      isGameWon: false,
-      isGameOver: false,
-      handleBlockClick: jest.fn(),
-      resetGame: jest.fn(),
-    };
-    useGameLogic.mockReturnValue(mockGameLogic);
+    fetch.mockClear();
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
+  test('renders without crashing', () => {
+    render(
+      <MemoryRouter>
+        <MemoryGame username={mockUsername} />
+      </MemoryRouter>
+    );
+    expect(screen.getByText(/memory game/i)).toBeInTheDocument();
   });
 
-  test("renders initial game state correctly", () => {
-    const { container } = render(<MemoryGame />);
-    expect(container.querySelector(".MemoryGame")).toBeTruthy();
-  });
+  test('calls backend API on game over', async () => {
+    fetch.mockImplementationOnce(() =>
+      Promise.resolve({
+        json: () => Promise.resolve({ success: true }),
+      })
+    );
 
-  test("resets game when retry button is clicked", () => {
-    mockGameLogic.isGameOver = true;
+    render(
+      <MemoryRouter>
+        <MemoryGame username={mockUsername} />
+      </MemoryRouter>
+    );
 
-    const { getByText } = render(<MemoryGame />);
-    const retryButton = getByText("Retry Level");
-
-    act(() => {
-      retryButton.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    await waitFor(() => {
+      expect(fetch).toHaveBeenCalledWith(
+        "http://localhost:5000/api/game/update-tiles-now",
+        expect.objectContaining({
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username: mockUsername, tilesNow: 0 }),
+        })
+      );
     });
-
-    expect(mockGameLogic.resetGame).toHaveBeenCalled();
+    
+    expect(fetch).toHaveBeenCalledTimes(1);
   });
-
-  test("transitions to the next level", () => {
-    mockGameLogic.isGameWon = true;
-    const { rerender } = render(<MemoryGame />);
-
-    act(() => {
-      rerender(<MemoryGame />);
-    });
-    expect(useGameLogic).toHaveBeenCalled();
-  });
-
-  
 });
