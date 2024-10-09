@@ -12,7 +12,7 @@ const LoginPage = ({ onLogin }) => {
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/api/auth", {
+      const response = await fetch("https://cs455-assignment-1-khsw.onrender.com/api/auth", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
