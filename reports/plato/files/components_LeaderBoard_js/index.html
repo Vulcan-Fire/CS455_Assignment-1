@@ -99,7 +99,7 @@ const Leaderboard = () =&gt; {
   useEffect(() =&gt; {
     const fetchLeaderboardData = async () =&gt; {
       try {
-        const response = await fetch(&quot;http://localhost:5000/api/game/leaderboard&quot;);
+        const response = await fetch(&quot;https://cs455-assignment-1-khsw.onrender.com/api/game/leaderboard&quot;);
         const data = await response.json();
         setLeaderboardData(data);
       } catch (error) {
