@@ -8,7 +8,7 @@ const Leaderboard = () => {
   useEffect(() => {
     const fetchLeaderboardData = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/game/leaderboard");
+        const response = await fetch("https://cs455-assignment-1-khsw.onrender.com/api/game/leaderboard");
         const data = await response.json();
         setLeaderboardData(data);
       } catch (error) {
