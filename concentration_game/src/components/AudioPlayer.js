@@ -37,6 +37,11 @@ const HomeButton = () => (
     <button className="home-button">Home</button>
   </a>
 );
+const Logout = () => (
+  <a href="/LoginPage" className="logout-link" data-testid="logout-button">
+    <button className="logout-button">Logout</button>
+  </a>
+);
 
 const AudioPlayer = ({ src, volume, loop }) => {
   const audioRef = useRef(null);
@@ -50,6 +55,7 @@ const AudioPlayer = ({ src, volume, loop }) => {
     <div className="audio-player-container" data-testid="audio-player">
       <audio ref={audioRef} src={src} loop={loop} data-testid="audio-element" />
       <HomeButton />
+      <Logout />
       <PlayPauseButton
         isPlaying={isPlaying}
         togglePlayPause={togglePlayPause}
