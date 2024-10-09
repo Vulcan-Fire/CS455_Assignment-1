@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">95.90</p>
+      <p class="stat">79.65</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">24</p>
+      <p class="stat">52</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">4.73</p>
+      <p class="stat">12.95</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">0.08</p>
+      <p class="stat">0.25</p>
     </div>
   </div>
 </div>
@@ -89,23 +89,51 @@
 
 <div class="container">
   <div class="row">
-    <textarea id="file-source" class="col-md-12">import React from &quot;react&quot;;
-import { BrowserRouter as Router, Route, Routes } from &quot;react-router-dom&quot;;
+    <textarea id="file-source" class="col-md-12">import React, { useEffect, useState } from &quot;react&quot;;
+import { BrowserRouter as Router, Route, Routes, Navigate} from &quot;react-router-dom&quot;;
 import Home from &quot;./components/Home&quot;;
 import Instructions from &quot;./components/Instructions&quot;;
 import Game from &quot;./components/Game&quot;;
+import LoginPage from &quot;./components/LoginPage&quot;;
 import AudioPlayer from &quot;./components/AudioPlayer&quot;;
 import backgroundMusic from &quot;./assets/background-music.mp3&quot;;
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const handleLogin = (username) =&gt; {
+    setIsAuthenticated(true);
+    localStorage.setItem(&quot;username&quot;, username);
+  };
+
+  const handleLogout = () =&gt; {
+    setIsAuthenticated(false);
+    localStorage.removeItem(&quot;username&quot;);
+  };
+
+  const LoginPageWithLogout = () =&gt; {
+    useEffect(() =&gt; {
+      handleLogout();
+    }, []);
+    
+    return &lt;LoginPage onLogin={handleLogin} /&gt;;
+  };
+
+  const username = localStorage.getItem(&quot;username&quot;) || isAuthenticated;
+
   return (
     &lt;Router&gt;
       &lt;div&gt;
         &lt;AudioPlayer src={backgroundMusic} volume={0.3} /&gt;
         &lt;Routes&gt;
           &lt;Route path=&quot;/&quot; element={&lt;Home /&gt;} /&gt;
+          &lt;Route path=&quot;/LoginPage&quot; element={&lt;LoginPageWithLogout /&gt;} /&gt; {}
+          &lt;Route path=&quot;/LeaderBoard&quot; element={username ? &lt;Leaderboard /&gt; : &lt;Navigate to=&quot;/LoginPage&quot; /&gt;} /&gt;
           &lt;Route path=&quot;/instructions&quot; element={&lt;Instructions /&gt;} /&gt;
-          &lt;Route path=&quot;/game&quot; element={&lt;Game /&gt;} /&gt;
+          &lt;Route 
+            path=&quot;/game&quot; 
+            element={username ? &lt;Game username={username}/&gt; : &lt;Navigate to=&quot;/LoginPage&quot; /&gt;} 
+          /&gt; {}
         &lt;/Routes&gt;
       &lt;/div&gt;
     &lt;/Router&gt;
