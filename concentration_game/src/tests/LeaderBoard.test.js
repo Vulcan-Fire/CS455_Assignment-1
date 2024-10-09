@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import Leaderboard from '../components/Leaderboard';
+import Leaderboard from '../components/LeaderBoard';
 import '@testing-library/jest-dom/extend-expect';
 
 global.fetch = jest.fn();
