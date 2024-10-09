@@ -52,7 +52,7 @@ const checkGameCompletion = async (
 
 const handleLevelCompletion = async (currentLevelIndex, tilesLeft, username) => {
   try {
-    const response = await fetch("http://localhost:5000/api/game/update-score", {
+    const response = await fetch("https://cs455-assignment-1-copy2-iidk.onrender.com/api/game/update-score", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -65,7 +65,7 @@ const handleLevelCompletion = async (currentLevelIndex, tilesLeft, username) => 
       }),
     });
 
-    await fetch("http://localhost:5000/api/game/reset-tiles-now", {
+    await fetch("https://cs455-assignment-1-copy2-iidk.onrender.com/api/game/reset-tiles-now", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -84,7 +84,7 @@ const handleInbetweenLevel = async (username, flippedBlocks) => {
   const selectedTiles = flippedBlocks.filter((flipped) => flipped).length;
 
   try {
-    const response = await fetch("http://localhost:5000/api/game/update-tiles-now", {
+    const response = await fetch("https://cs455-assignment-1-copy2-iidk.onrender.com/api/game/update-tiles-now", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -186,7 +186,7 @@ const MemoryGame = ({ username }) => {
   useEffect(() => {
     const resetTilesNowBeforeNavigate = async () => {
       try {
-        await fetch("http://localhost:5000/api/game/reset-tiles-now", {
+        await fetch("https://cs455-assignment-1-copy2-iidk.onrender.com/api/game/reset-tiles-now", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
