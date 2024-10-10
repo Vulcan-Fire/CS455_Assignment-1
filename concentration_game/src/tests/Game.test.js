@@ -37,7 +37,7 @@ describe('MemoryGame', () => {
 
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith(
-        "http://localhost:5000/api/game/update-tiles-now",
+        "https://cs455-assignment-1-khsw.onrender.com/api/game/update-tiles-now",
         expect.objectContaining({
           method: "POST",
           headers: {
