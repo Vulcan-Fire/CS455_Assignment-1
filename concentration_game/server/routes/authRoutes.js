@@ -33,12 +33,16 @@ router.post('/auth', async (req, res) => {
 });
 
 router.post('/logout', (req, res) => {
+  if (req.session) {
     req.session.destroy((err) => {
-        if (err) {
-            return res.status(500).json({ message: 'Error logging out' });
-        }
-        res.status(200).json({ message: 'Logout successful' });
+      if (err) {
+        return res.status(500).json({ message: 'Error logging out' });
+      }
+      return res.status(200).json({ message: 'Logout successful' });
     });
+  } else {
+    return res.status(200).json({ message: 'Logout successful (no session)' });
+  }
 });
 
 
