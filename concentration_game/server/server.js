@@ -14,9 +14,9 @@ app.use(bodyParser.json());
 db.connect();
 
 app.use('/api', authRoutes);
-app.use('/api/game',game);
+app.use('/api/game', game);
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
