@@ -25,10 +25,26 @@ concentration-game/
 │ ├── index.html
 │ ├── favicon.ico
 │
+├── documentation/
+│ ├── project.jpg
+├── server/
+| | ├── models/
+│ │ ├── User.js
+| | ├── routes/
+│ │ ├── authRoutes.js
+│ │ ├── game.js
+│ ├── server.js
+│ ├── db.js
+│ ├── package.json
+│ ├── package-lock.json
+| | 
 ├── src/
 | | ├── tests/
 │ │ ├── Board.test.js
 │ │ ├── Game.test.js
+│ │ ├── LeaderBoard.test.js
+│ │ ├── LoginPage.test.js
+│ │ ├── ServerToDb.test.js
 │ │ ├── Home.test.js
 │ │ ├── Instruction.test.js
 │ │ └── AudioPlayer.test.js
@@ -45,6 +61,10 @@ concentration-game/
 │ │ └── AudioPlayer.css
 │ │ └── Game.css
 │ │ └── Home.css
+│ │ └── LeaderBoard.css
+│ │ └── LeaderBoard.js
+│ │ └── LoginPage.css
+│ │ └── LoginPage.js
 │ │ └── Instruction.css
 │ │
 │ ├── assets/
