@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const UserSchema = new mongoose.Schema({
   username: {
@@ -26,6 +27,11 @@ const UserSchema = new mongoose.Schema({
     },
   ],
 });
+
+UserSchema.methods.comparePassword = async function (candidatePassword) {
+  return await bcrypt.compare(candidatePassword, this.password);
+};
+
 
 UserSchema.methods.calculateTotalScore = function () {
   return this.levels.reduce((sum, level) => sum + level.correctTilesSelected, 0);
