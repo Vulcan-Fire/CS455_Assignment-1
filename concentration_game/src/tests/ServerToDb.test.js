@@ -43,6 +43,60 @@ describe('Server and Database Integration Tests', () => {
     expect(logoutResponse.body.message).toBe('Logout successful (no session)');
   });
 
+  it('should update the score for a user', async () => {
+    const scoreUpdateResponse = await request(app)
+      .post('/api/game/update-score')
+      .send({
+        username: testUsername,
+        level: 1,
+        correctTilesSelected: 5,
+        totalTiles: 10
+      });
+
+    expect(scoreUpdateResponse.statusCode).toBe(200);
+    expect(scoreUpdateResponse.body.message).toBe('Score updated successfully');
+    expect(scoreUpdateResponse.body.user.levels[0].correctTilesSelected).toBe(5);
+    expect(scoreUpdateResponse.body.user.tilesNow).toBe(0);
+  });
+
+  it('should reset tilesNow and update maxScore correctly', async () => {
+    const resetTilesResponse = await request(app)
+      .post('/api/game/reset-tiles-now')
+      .send({ username: testUsername });
+
+    expect(resetTilesResponse.statusCode).toBe(200);
+    expect(resetTilesResponse.body.message).toBe('TilesNow reset successfully');
+
+    const user = await User.findOne({ username: testUsername });
+    const totalScore = user.levels.reduce((sum, levelData) => sum + levelData.correctTilesSelected, 0);
+    expect(user.tilesNow).toBe(0);
+    expect(user.maxScore).toBe(totalScore);
+  });
+
+  it('should update tilesNow for a user', async () => {
+    const updateTilesResponse = await request(app)
+      .post('/api/game/update-tiles-now')
+      .send({ username: testUsername, tilesNow: 7 });
+
+    expect(updateTilesResponse.statusCode).toBe(200);
+    expect(updateTilesResponse.body.message).toBe('TilesNow updated successfully');
+
+    const user = await User.findOne({ username: testUsername });
+    expect(user.tilesNow).toBe(7);
+  });
+
+  it('should return the leaderboard sorted by maxScore', async () => {
+    const leaderboardResponse = await request(app).get('/api/game/leaderboard');
+
+    expect(leaderboardResponse.statusCode).toBe(200);
+    expect(Array.isArray(leaderboardResponse.body)).toBe(true);
+
+    const leaderboard = leaderboardResponse.body;
+    for (let i = 1; i < leaderboard.length; i++) {
+      expect(leaderboard[i - 1].maxScore).toBeGreaterThanOrEqual(leaderboard[i].maxScore);
+    }
+  });
+
   afterAll(async () => {
     await User.deleteOne({ username: testUsername });
     await mongoose.disconnect();
