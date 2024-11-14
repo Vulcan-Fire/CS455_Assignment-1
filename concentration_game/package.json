@@ -39,9 +39,9 @@
     "build": "react-scripts build",
     "test": "jest",
     "eject": "react-scripts eject",
+    "artillery-test": "artillery run perf_test.yml",
     "duplication": "jscpd --min-lines 3 --min-tokens 20 concentration_game/src/",
-    "lint": "eslint .",
-    "artillery-test": "artillery run perf_test.yml"
+    "lint": "eslint ."
   },
   "eslintConfig": {
     "extends": [
