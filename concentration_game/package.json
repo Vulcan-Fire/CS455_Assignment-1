@@ -41,7 +41,7 @@
     "eject": "react-scripts eject",
     "duplication": "jscpd --min-lines 3 --min-tokens 20 concentration_game/src/",
     "lint": "eslint .",
-    "artillery-test": "artillery run test.yml"
+    "artillery-test": "artillery run perf_test.yml"
   },
   "eslintConfig": {
     "extends": [
