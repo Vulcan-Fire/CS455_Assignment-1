@@ -99,7 +99,7 @@ jobs:
   artillery_test:
     name: Artillery Load Test
     runs-on: ubuntu-latest
-    if: github.event_name == 'schedule'
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
