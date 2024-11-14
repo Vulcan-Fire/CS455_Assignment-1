@@ -1,0 +1,22 @@
+config:
+  target: "https://cs-455-assignment-1.vercel.app"
+  phases:
+    - duration: 1
+      arrivalRate: 1000
+  http:
+    timeout: 60
+  output: "report.json"
+
+scenarios:
+  - name: "Simple game access"
+    flow:
+      - post:
+          url: "/api/auth"
+          headers:
+            Content-Type: "application/json"
+          json:
+            username: "123"
+            password: "123"
+      - think: 1
+      - get:
+          url: "/game"
