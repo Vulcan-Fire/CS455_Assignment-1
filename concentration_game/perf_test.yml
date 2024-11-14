@@ -1,92 +1,24 @@
-const http = require('http');
-const fs = require('fs');
-
-const config = {
-  target: "https://cs-455-assignment-1.vercel.app",
-  phases: [
-    {
-      duration: 1,
-      arrivalRate: 1000
-    }
-  ],
-  http: {
+config:
+  target: "https://cs-455-assignment-1.vercel.app"
+  phases:
+    - duration: 1
+      arrivalRate: 10000
+  http:
     timeout: 0.5
-  },
   output: "report.json"
-};
 
-const scenarios = [
-  {
-    name: "Simple game access",
-    flow: [
-      {
-        post: {
-          url: "/api/auth",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          json: {
-            username: "123",
+scenarios:
+  - name: "Simple game access"
+    flow:
+      - post:
+          url: "/api/auth"
+          headers:
+            Content-Type: "application/json"
+          json:
+            username: "123"
             password: "123"
-          }
-        }
-      },
-      {
-        think: 1
-      },
-      {
-        get: {
+      - think: 1
+      - get:
           url: "/game"
-        }
-      }
-    ]
-  }
-];
-
-async function sendRequests(scenario, arrivalRate, duration) {
-  const requestCount = Math.floor(arrivalRate * duration);
-  const requestPromises = [];
-
-  for (let i = 0; i < requestCount; i++) {
-    requestPromises.push(new Promise((resolve, reject) => {
-      const req = http.request(
-        `${config.target}${scenario.flow[0].post.url}`,
-        {
-          method: 'POST',
-          headers: scenario.flow[0].post.headers,
-          timeout: config.http.timeout * 1000
-        },
-        (res) => {
-          res.on('data', () => {});
-          res.on('end', () => {
-            resolve();
-          });
-        }
-      );
-
-      req.on('error', (err) => {
-        reject(err);
-      });
-
-      req.write(JSON.stringify(scenario.flow[0].post.json));
-      req.end();
-    }));
-
-    await new Promise((resolve) => setTimeout(resolve, 1000 / arrivalRate));
-  }
-
-  await Promise.all(requestPromises);
-}
-
-async function runLoadTest() {
-  for (const scenario of scenarios) {
-    for (const phase of config.phases) {
-      await sendRequests(scenario, phase.arrivalRate, phase.duration);
-    }
-  }
-
-  // Write the report to a file
-  fs.writeFileSync(config.output, JSON.stringify({ scenarios }));
-}
-
-runLoadTest();
+          http:
+            request_rate: 10000/sec
