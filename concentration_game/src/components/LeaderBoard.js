@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./LeaderBoard.css";
 import { Link } from "react-router-dom";
+import { loadBalancedFetch } from "./LoadBalancer";
 
 const Leaderboard = () => {
   const [leaderboardData, setLeaderboardData] = useState([]);
@@ -8,7 +9,7 @@ const Leaderboard = () => {
   useEffect(() => {
     const fetchLeaderboardData = async () => {
       try {
-        const response = await fetch("https://cs455-assignment-1-khsw.onrender.com/api/game/leaderboard");
+        const response = await loadBalancedFetch("api/game/leaderboard");
         const data = await response.json();
         setLeaderboardData(data);
       } catch (error) {
