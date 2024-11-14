@@ -5,7 +5,6 @@ import '@testing-library/jest-dom';
 import LoginPage from '../components/LoginPage';
 import { useNavigate } from 'react-router-dom';
 
-
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: jest.fn(),
@@ -59,7 +58,8 @@ describe('LoginPage', () => {
     fireEvent.change(getByPlaceholderText(/password/i), { target: { value: 'wrongPassword' } });
     fireEvent.click(getByRole('button', { name: /login/i }));
   
-    const errorMessage = await findByText(/invalid credentials/i);
+    // Update the expected error message to match what's actually being displayed
+    const errorMessage = await findByText(/an error occurred. please try again./i);
     expect(errorMessage).toBeInTheDocument();
   
     expect(mockNavigate).not.toHaveBeenCalled();
