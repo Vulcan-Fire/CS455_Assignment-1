@@ -8,22 +8,26 @@ on:
     branches:
       - main
   schedule:
-    - cron: '0 0 * * *'  
+    - cron: '0 0 * * *'
 
 jobs:
   lint:
     name: Lint Code
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
         node-version: '14'
+
     - name: Install dependencies
       run: npm install
       working-directory: concentration_game  
+
     - name: Run ESLint
       run: npm run lint
       working-directory: concentration_game  
@@ -31,28 +35,31 @@ jobs:
   complexity:
     name: Code Complexity Report
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
+
       - name: Install plato
         run: npm install -g plato
+
       - name: Run Plato
         run: plato -r -d report 'concentration_game/src/**/!(*test).js'
+
       - name: List Plato Report Directory
         run: ls -R report
+
       - name: Upload Plato Report
         uses: actions/upload-artifact@v3
         with:
           name: plato-report
           path: report
+          
       - name: Prepare report directory
         run: |
           mkdir -p reports/plato
           cp -r report/* reports/plato/ || true
+
       - name: Commit and push report
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -65,41 +72,42 @@ jobs:
           else
             git commit -m "Update Plato report"
             git push origin main
+          fi
 
   test_coverage:
     name: Test Coverage Report
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'
+
     - name: Install dependencies
       run: npm install
       working-directory: concentration_game  
+
     - name: Run Tests with Coverage
-      run: npm run test -- --coverage
+      run: npm run test
       working-directory: concentration_game  
+
     - name: Upload Coverage Report
       uses: actions/upload-artifact@v3
       with:
         name: coverage-report
-        path: concentration_game/coverage/lcov-report
-
+        path: concentration_game/coverage/lcov-report  
+        
   artillery_test:
     name: Artillery Load Test
     runs-on: ubuntu-latest
-    if: github.event_name == 'schedule'
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'
-    - name: Install dependencies
-      run: npm install -g artillery
-    - name: Run Artillery Test
-      run: artillery run test.yml
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Install dependencies
+        run: npm install
+      - name: Run Artillery Test
+        run: npm run artillery-test
