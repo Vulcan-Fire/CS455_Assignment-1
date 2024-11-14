@@ -1,9 +1,12 @@
+const http = require('http');
+const fs = require('fs');
+
 const config = {
   target: "https://cs-455-assignment-1.vercel.app",
   phases: [
     {
       duration: 1,
-      arrivalRate: 15000
+      arrivalRate: 1000
     }
   ],
   http: {
@@ -40,11 +43,11 @@ const scenarios = [
   }
 ];
 
-async function sendRequests(scenario, arrivalRate) {
-  const startTime = Date.now();
+async function sendRequests(scenario, arrivalRate, duration) {
+  const requestCount = Math.floor(arrivalRate * duration);
   const requestPromises = [];
 
-  while (Date.now() - startTime < 1000) {
+  for (let i = 0; i < requestCount; i++) {
     requestPromises.push(new Promise((resolve, reject) => {
       const req = http.request(
         `${config.target}${scenario.flow[0].post.url}`,
@@ -78,7 +81,7 @@ async function sendRequests(scenario, arrivalRate) {
 async function runLoadTest() {
   for (const scenario of scenarios) {
     for (const phase of config.phases) {
-      await sendRequests(scenario, phase.arrivalRate);
+      await sendRequests(scenario, phase.arrivalRate, phase.duration);
     }
   }
 
