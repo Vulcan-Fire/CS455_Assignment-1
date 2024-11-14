@@ -114,4 +114,4 @@ jobs:
           sudo apt-get install -y k6
       - name: Run K6 Load Test
         run: |
-          k6 run concentration_game/tests/k6_test_script.js
+          k6 run concentration_game/src/tests/k6_test_script.js
