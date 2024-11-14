@@ -107,11 +107,14 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '16'
   
       - name: Install dependencies
-        run: npm install -g artillery
+        run: npm install
         working-directory: concentration_game 
+  
+      - name: Install Artillery Globally
+        run: npm install -g artillery
   
       - name: Run Artillery Test
         run: npm run artillery-test
