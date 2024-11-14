@@ -2,7 +2,7 @@ config:
   target: "https://cs-455-assignment-1.vercel.app"
   phases:
     - duration: 1
-      arrivalRate: 10000
+      arrivalRate:  10000
   http:
     timeout: 60
   output: "report.json"
