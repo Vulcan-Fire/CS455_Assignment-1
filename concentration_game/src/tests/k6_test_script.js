@@ -4,9 +4,9 @@ import { sleep } from "k6";
 // Load test options
 export const options = {
   stages: [
-    { duration: "10s", target: 50 }, // Ramp-up to 10,000 users over 100 seconds
-    { duration: "10s", target: 50 }, // Hold at 10,000 users for 10 seconds
-    { duration: "10s", target: 0 }, // Ramp-down to 0 users over 100 seconds
+    { duration: "180s", target: 1000 }, // Ramp-up to 10,000 users over 100 seconds
+    { duration: "10s", target: 1000 }, // Hold at 10,000 users for 10 seconds
+    { duration: "180s", target: 0 }, // Ramp-down to 0 users over 100 seconds
   ],
 };
 
