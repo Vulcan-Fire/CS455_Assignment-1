@@ -7,6 +7,7 @@ import LoginPage from "./components/LoginPage";
 import AudioPlayer from "./components/AudioPlayer";
 import backgroundMusic from "./assets/background-music.mp3";
 import Leaderboard from "./components/LeaderBoard";
+import { loadBalancedFetch } from "./components/LoadBalancer";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -20,7 +21,7 @@ function App() {
 
   const handleLogout = async () => {
     try {
-        await fetch('/api/logout', { method: 'POST' });
+        await loadBalancedFetch('/api/logout', { method: 'POST' });
         setIsAuthenticated(false);
         localStorage.removeItem("username");
     } catch (error) {
