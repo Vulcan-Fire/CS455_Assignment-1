@@ -20,5 +20,4 @@ scenarios:
       - think: 1
       - get:
           url: "/game"
-          http:
-            request_rate: 10000
+          rate: 10000
