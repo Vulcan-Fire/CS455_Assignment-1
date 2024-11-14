@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types"; 
 import { useNavigate } from "react-router-dom";
 import GameBoard from "./Board";
+import { loadBalancedFetch } from "./LoadBalancer";
 import useGameLogic from "./FlipLogic";
+
 import "./Game.css";
 
 const levels = [
@@ -52,7 +54,7 @@ const checkGameCompletion = async (
 
 const handleLevelCompletion = async (currentLevelIndex, tilesLeft, username) => {
   try {
-    const response = await fetch("https://cs455-assignment-1-khsw.onrender.com/api/game/update-score", {
+    const response = await loadBalancedFetch("api/game/update-score", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -65,7 +67,7 @@ const handleLevelCompletion = async (currentLevelIndex, tilesLeft, username) => 
       }),
     });
 
-    await fetch("https://cs455-assignment-1-khsw.onrender.com/api/game/reset-tiles-now", {
+    await loadBalancedFetch("api/game/reset-tiles-now", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -84,7 +86,7 @@ const handleInbetweenLevel = async (username, flippedBlocks) => {
   const selectedTiles = flippedBlocks.filter((flipped) => flipped).length;
 
   try {
-    const response = await fetch("https://cs455-assignment-1-khsw.onrender.com/api/game/update-tiles-now", {
+    const response = await loadBalancedFetch("api/game/update-tiles-now", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -186,7 +188,7 @@ const MemoryGame = ({ username }) => {
   useEffect(() => {
     const resetTilesNowBeforeNavigate = async () => {
       try {
-        await fetch("https://cs455-assignment-1-khsw.onrender.com/api/game/reset-tiles-now", {
+        await loadBalancedFetch("api/game/reset-tiles-now", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
