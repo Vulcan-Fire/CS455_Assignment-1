@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">66.37</p>
+      <p class="stat">57.73</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">32</p>
+      <p class="stat">47</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">8.57</p>
+      <p class="stat">12.42</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">0.14</p>
+      <p class="stat">0.23</p>
     </div>
   </div>
 </div>
@@ -95,15 +95,16 @@ import { sleep } from &quot;k6&quot;;
 // Load test options
 export const options = {
   stages: [
-    { duration: &quot;100s&quot;, target: 10000 }, // Ramp-up to 50 users over 30 seconds
-    { duration: &quot;10s&quot;, target: 10000 },
-    { duration: &quot;100s&quot;, target: 0 }, // Ramp-down to 0 users over 30 seconds
+    { duration: &quot;10s&quot;, target: 50 }, // Ramp-up to 10,000 users over 100 seconds
+    { duration: &quot;10s&quot;, target: 50 }, // Hold at 10,000 users for 10 seconds
+    { duration: &quot;10s&quot;, target: 0 }, // Ramp-down to 0 users over 100 seconds
   ],
 };
 
 // Default function to be executed by K6 virtual users
 export default function () {
-  const url = &quot;https://cs455-assignment-1-khsw.onrender.com/api/auth&quot;; // Replace with your target URL
+  // Step 1: Login (POST request to /api/auth)
+  const url = &quot;https://cs455-assignment-1-khsw.onrender.com/api/auth&quot;;
   const payload = JSON.stringify({
     username: &quot;user1&quot;,
     password: &quot;pass123&quot;,
@@ -115,8 +116,22 @@ export default function () {
     },
   };
 
-  // Make the POST request
-  http.post(url, payload, params);
+  // Make the POST request to login
+  const loginResponse = http.post(url, payload, params);
+
+  // Check if the login was successful (Status 200)
+  if (loginResponse.status === 200) {
+    // Step 2: Access the game page (GET request to /game)
+    const gameUrl = &quot;https://cs-455-assignment-1.vercel.app/game&quot;;
+    const gameResponse = http.get(gameUrl);
+
+    // You can optionally add some checks or logging here to ensure the game page was loaded
+    if (gameResponse.status !== 200) {
+      console.error(&quot;Failed to load the game page.&quot;);
+    }
+  } else {
+    console.error(&quot;Login failed.&quot;);
+  }
 
   // Simulate a short pause between requests to mimic user behavior
   sleep(1);
