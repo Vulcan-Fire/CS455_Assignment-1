@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import { loadBalancedFetch } from "./LoadBalancer";
 import "./LoginPage.css";
 
 const LoginPage = ({ onLogin }) => {
@@ -12,7 +13,7 @@ const LoginPage = ({ onLogin }) => {
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch("https://cs455-assignment-1-khsw.onrender.com/api/auth", {
+      const response = await loadBalancedFetch("api/auth", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
